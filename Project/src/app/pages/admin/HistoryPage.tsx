@@ -28,22 +28,29 @@ export function HistoryPage() {
   }, [searchQuery]);
 
   const fetchHistory = async () => {
-  setLoading(true);
-  setError("");
-  try {
-    const mockHistory = [
-      { id: 1, newTicket: "T-1024", matchedTicket: "T-0842", score: "94%", verdict: "Confirmed", decision_flow: "Auto Duplicate (90%+)", date: "09-06-2026", reasoning: "The user is reporting an identical OAuth credential loop issue matching the master record signature exactly." },
-      { id: 2, newTicket: "T-1023", matchedTicket: "T-0911", score: "78%", verdict: "Confirmed", decision_flow: "Gemini Verified", date: "09-06-2026", reasoning: "Subject text uses different phrasing but contextually points to the same underlying database timeout." },
-      { id: 3, newTicket: "T-1022", matchedTicket: null, score: "42%", verdict: "Rejected", decision_flow: "Fallback Unique", date: "08-06-2026", reasoning: "Low similarity score against vector indexes. Classified as an isolated custom edge-case issue." }
-    ];
-    setHistory(mockHistory);
-    setTotalCount(mockHistory.length);
-  } catch (err: any) {
-    setError("Failed to load audit trail.");
-  } finally {
-    setLoading(false);
-  }
-};
+    setLoading(true);
+    setError("");
+    try {
+      const params = new URLSearchParams({
+        page: String(currentPage),
+        q: debouncedSearch,
+        verdict: verdictFilter
+      });
+      console.log(`Fetching analysis history with parameters: ${params.toString()}`);
+      const response = await fetch(`/api/admin/history?${params.toString()}`, { credentials: "include" });
+      if (!response.ok) {
+        throw new Error(`Server returned error: ${response.status}`);
+      }
+      const data = await response.json();
+      setHistory(data.results || []);
+      setTotalCount(data.count || 0);
+    } catch (err: any) {
+      console.error("Failed to load analysis logs:", err);
+      setError(err.message || "Failed to load duplicate analysis logs.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     fetchHistory();
