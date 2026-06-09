@@ -56,31 +56,22 @@ export function TicketsPage() {
 
   // Main tickets fetch
   const fetchTickets = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const params = new URLSearchParams({
-        page: String(currentPage),
-        q: debouncedSearch,
-        status: statusFilter,
-        category: categoryFilter
-      });
-      console.log(`Fetching tickets listing with query params: ${params.toString()}`);
-      const response = await fetch(`/api/tickets?${params.toString()}`);
-      if (!response.ok) {
-        throw new Error(`Server returned error: ${response.status}`);
-      }
-      const data = await response.json();
-      setTickets(data.results || []);
-      setTotalCount(data.count || 0);
-    } catch (err: any) {
-      console.error("Failed to fetch tickets:", err);
-      setError(err.message || "Failed to load tickets.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  setLoading(true);
+  setError("");
+  try {
+    const mockTickets = [
+      { id: 1, ticket_code: "T-1024", subject: "Cannot log in using single sign-on", category_name: "Authentication & Access", status: "DUPLICATE", created_at: "2026-06-09T10:00:00Z" },
+      { id: 2, ticket_code: "T-1023", subject: "Invoice mismatch on premium checkout tier", category_name: "Billing & Payments", status: "UNIQUE", created_at: "2026-06-09T09:15:00Z" },
+      { id: 3, ticket_code: "T-1022", subject: "Verification code email not arriving", category_name: "Email Delivery Issues", status: "PENDING_REVIEW", created_at: "2026-06-08T14:22:00Z" }
+    ];
+    setTickets(mockTickets);
+    setTotalCount(mockTickets.length);
+  } catch (err: any) {
+    setError("Failed to load ticket records.");
+  } finally {
+    setLoading(false);
+  }
+};
   useEffect(() => {
     fetchTickets();
   }, [debouncedSearch, statusFilter, categoryFilter, currentPage]);
