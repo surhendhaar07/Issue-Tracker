@@ -59,7 +59,8 @@ export function TicketsPage() {
   setLoading(true);
   setError("");
   try {
-    const mockTickets = [
+    // Add : any[] here to avoid type errors
+    const mockTickets: any[] = [
       { id: 1, ticket_code: "T-1024", subject: "Cannot log in using single sign-on", category_name: "Authentication & Access", status: "DUPLICATE", created_at: "2026-06-09T10:00:00Z" },
       { id: 2, ticket_code: "T-1023", subject: "Invoice mismatch on premium checkout tier", category_name: "Billing & Payments", status: "UNIQUE", created_at: "2026-06-09T09:15:00Z" },
       { id: 3, ticket_code: "T-1022", subject: "Verification code email not arriving", category_name: "Email Delivery Issues", status: "PENDING_REVIEW", created_at: "2026-06-08T14:22:00Z" }
