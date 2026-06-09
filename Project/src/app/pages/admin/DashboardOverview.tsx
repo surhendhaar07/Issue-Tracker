@@ -8,30 +8,26 @@ export function DashboardOverview() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-useEffect(() => {
-  console.log("Loading local mock dashboard analytics...");
-  setData({
-    total_tickets: { value: "1,248", change_percent: "+12%" },
-    duplicate_matches: { value: "142", change_percent: "+8%" },
-    categories_count: { value: "6", change_percent: "0%" },
-    avg_similarity_score: { value: "84.5%", change_percent: "+1.5%" },
-    chart_data: [
-      { name: "Mon", tickets: 45, duplicates: 5 },
-      { name: "Tue", tickets: 52, duplicates: 8 },
-      { name: "Wed", tickets: 49, duplicates: 12 },
-      { name: "Thu", tickets: 63, duplicates: 15 },
-      { name: "Fri", tickets: 58, duplicates: 10 },
-      { name: "Sat", tickets: 24, duplicates: 3 },
-      { name: "Sun", tickets: 32, duplicates: 4 },
-    ],
-    recent_activity: [
-      { id: "T-1004", time: "5 mins ago", title: "Unable to reset login security password", status: "Duplicate", match: "T-1001", score: "92%" },
-      { id: "T-1003", time: "15 mins ago", title: "Payment failure on checkout window", status: "Unique", match: null, score: null },
-      { id: "T-1002", time: "1 hr ago", title: "Database connection timeout error", status: "Duplicate", match: "T-0985", score: "88%" },
-    ]
-  });
-  setLoading(false);
-}, []);
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        console.log("Fetching admin dashboard analytics from backend...");
+        const response = await fetch("/api/admin/dashboard", { credentials: "include" });
+        if (!response.ok) {
+          throw new Error(`Failed to load metrics. Server status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Dashboard analytics loaded:", data);
+        setData(data);
+      } catch (err: any) {
+        console.error("Dashboard load failure:", err);
+        setError(err.message || "Failed to load dashboard metrics.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboardData();
+  }, []);
 
   if (loading) {
     return (
