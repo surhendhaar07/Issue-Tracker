@@ -30,8 +30,8 @@ export function CategoriesPage() {
   setLoading(true);
   setError("");
   try {
-    // Mock local database array
-    const mockCategories = [
+    // Add : any[] right here to make TypeScript accept the format
+    const mockCategories: any[] = [
       { id: 1, name: "Authentication & Access", icon_name: "Key", ticket_count: 342, duplicate_count: 45, duplication_rate: 13 },
       { id: 2, name: "Billing & Payments", icon_name: "CreditCard", ticket_count: 512, duplicate_count: 102, duplication_rate: 20 },
       { id: 3, name: "Email Delivery Issues", icon_name: "Mail", ticket_count: 189, duplicate_count: 12, duplication_rate: 6 },
@@ -45,7 +45,6 @@ export function CategoriesPage() {
     setLoading(false);
   }
 };
-
   useEffect(() => {
     fetchCategories();
   }, []);
