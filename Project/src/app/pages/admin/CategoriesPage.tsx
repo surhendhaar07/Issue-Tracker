@@ -27,24 +27,24 @@ export function CategoriesPage() {
   const [formError, setFormError] = useState("");
 
   const fetchCategories = async () => {
-  setLoading(true);
-  setError("");
-  try {
-    // Add : any[] right here to make TypeScript accept the format
-    const mockCategories: any[] = [
-      { id: 1, name: "Authentication & Access", icon_name: "Key", ticket_count: 342, duplicate_count: 45, duplication_rate: 13 },
-      { id: 2, name: "Billing & Payments", icon_name: "CreditCard", ticket_count: 512, duplicate_count: 102, duplication_rate: 20 },
-      { id: 3, name: "Email Delivery Issues", icon_name: "Mail", ticket_count: 189, duplicate_count: 12, duplication_rate: 6 },
-      { id: 4, name: "Security & Permissions", icon_name: "Shield", ticket_count: 94, duplicate_count: 8, duplication_rate: 8 },
-      { id: 5, name: "Server & Infrastructure", icon_name: "HardDrive", ticket_count: 215, duplicate_count: 67, duplication_rate: 31 },
-    ];
-    setCategories(mockCategories);
-  } catch (err: any) {
-    setError("Failed to load categories list.");
-  } finally {
-    setLoading(false);
-  }
-};
+    setLoading(true);
+    setError("");
+    try {
+      console.log("Fetching dynamic categories list...");
+      const response = await fetch("/api/categories");
+      if (!response.ok) {
+        throw new Error(`Server returned status: ${response.status}`);
+      }
+      const data = await response.json();
+      setCategories(data);
+    } catch (err: any) {
+      console.error("Failed to load categories:", err);
+      setError(err.message || "Failed to load categories list.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchCategories();
   }, []);
