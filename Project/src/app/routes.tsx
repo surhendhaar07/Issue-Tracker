@@ -7,20 +7,25 @@ import { HistoryPage } from "./pages/admin/HistoryPage";
 import { CategoriesPage } from "./pages/admin/CategoriesPage";
 import { SettingsPage } from "./pages/admin/SettingsPage";
 
-export const router = createBrowserRouter([
+export const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      Component: LandingPage,
+    },
+    {
+      path: "/admin",
+      Component: AdminLayout,
+      children: [
+        { index: true, Component: DashboardOverview },
+        { path: "tickets", Component: TicketsPage },
+        { path: "history", Component: HistoryPage },
+        { path: "categories", Component: CategoriesPage },
+        { path: "settings", Component: SettingsPage },
+      ],
+    },
+  ],
   {
-    path: "/",
-    Component: LandingPage,
-  },
-  {
-    path: "/admin",
-    Component: AdminLayout,
-    children: [
-      { index: true, Component: DashboardOverview },
-      { path: "tickets", Component: TicketsPage },
-      { path: "history", Component: HistoryPage },
-      { path: "categories", Component: CategoriesPage },
-      { path: "settings", Component: SettingsPage },
-    ],
-  },
-]);
+    basename: "/Issue-Tracker", // 👈 Added this options block right after the array closure
+  }
+);
